@@ -43,7 +43,7 @@ class InstallLib():
         print(urllib.request.urlretrieve(self.__forgeURL, "forgeinstall.jar"))
         subprocess.call(['java', '-jar', 'forgeinstall.jar'])
         self.removeFile("forgeinstall.jar")
-        self.removeFile("installer.log")
+        self.removeFile("forgeinstall.jar.log")
 
 
     def installMods(self):
