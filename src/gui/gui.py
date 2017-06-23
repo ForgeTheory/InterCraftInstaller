@@ -4,7 +4,7 @@ from PIL import ImageTk,Image
 import urllib.request
 from installlib.installlib import *
 import threading
-#from tkinter.ttk import *
+from tkinter import ttk
 
 class Window():
 
@@ -28,6 +28,9 @@ class Window():
 
         self.__imageLabel = Label(self.__master, image = self.__image)
         self.__imageLabel.grid(row=0,column=0,columnspan=20,rowspan=20)
+
+        self.__progress = 0
+        self.__progressBar = ttk.Progressbar(self.__master,orient='horizontal',length=300)
 
         #self.__title = Label(self.__master, text = "InterCraft Installer", font = ("Roboto", 20), background = 'white', foreground = '#292b2c')
         #self.__title.grid(row=9,column=9)
@@ -92,6 +95,7 @@ class Window():
         self.__button1.configure(cursor = 'arrow')
         self.__button1.bind("<ButtonRelease-1>", self.doNothing)
         self.__button1.bind("<Enter>", self.onLeave)
+        self.__progressBar.grid(row=13, column=10)
         print("Installing InterCraft...")
         print("Installing forge...")
         t1 = threading.Thread(target = self.__installer.installForge, args = (self.installFinish,))
@@ -103,15 +107,21 @@ class Window():
         t2.start()
         print("Configuring profile...")
         self.__installer.installJson
-        self.__finished += 1
+        self.installFinish()
 
 
     def installFinish(self):
         self.__finished += 1
         if self.__finished == 3:
             print("install complete.")
+            self.__progress = 100
             self.__master.quit()
-
+        elif self.__finished == 2:
+            self.__progress = 50
+        else:
+            self.__progress = 33
+        self.__progressBar.step(self.__progress)
+        self.__progressBar.update()
 
     def doNothing(self, event):
         pass
