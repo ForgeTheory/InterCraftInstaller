@@ -12,7 +12,14 @@ class Window():
         print(urllib.request.urlretrieve("https://intercraftmc.com/installer/background.png", "intercraftimage.png"))
 
         self.__image = ImageTk.PhotoImage(Image.open('intercraftimage.png'))
-        
+
+        try:
+            os.remove('intercraftimage.png')
+        except Exception as e:
+            print("Couldn't delete the intercraft image...")
+
+
+
         self.__master.configure(background = 'white')
 
         self.__imageLabel = Label(self.__master, image = self.__image)
@@ -24,17 +31,26 @@ class Window():
         #self.__spacer = Label(self.__master, background = 'white')
         #self.__spacer.grid(row=9,column=8)
 
-        self.__button = Button(self.__master, text = "Install InterCraft", font = ("Helvetica", 16), command = self.install)
-        self.__button.grid(row=11,column=10)
+        self.__button1 = Button(self.__master, text = "Install InterCraft", font = ("Helvetica", 16))
+        self.__button1.grid(row=11,column=10)
+
         #Button styling
-        self.__button.configure(foreground = 'white')
-        self.__button.configure(relief = 'flat')
-        self.__button.configure(background = '#008BFF')
-        self.__button.configure(highlightbackground = '#006ac2')
-        self.__button.configure(activebackground = '#006ac2')
-        self.__button.configure(activeforeground = 'white')
-        self.__button.configure(highlightcolor = '#006ac2')
-        self.__button.configure(overrelief = 'groove')
+        self.__button1.configure(foreground = 'white')
+        self.__button1.configure(relief = 'flat')
+        self.__button1.configure(background = '#008BFF')
+        self.__button1.configure(activebackground = '#006ac2')
+        self.__button1.configure(activeforeground = 'white')
+        self.__button1.bind("<Enter>", self.onHover)
+        self.__button1.bind("<Leave>", self.onLeave)
+
+
+    def onHover(self, event):
+        self.__button1.configure(background = '#006ac2')
+
+
+    def onLeave(self, event):
+        self.__button1.configure(background = '#008BFF')
+
 
     def install(self):
         print("Installing InterCraft...")
