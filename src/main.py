@@ -6,7 +6,7 @@ def main(argv):
     root.title("InterCraft Installer")
 
     w = 700
-    h = 423
+    h = 419
 
     ws = root.winfo_screenwidth()
     hs = root.winfo_screenheight()

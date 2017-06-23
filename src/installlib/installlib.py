@@ -28,6 +28,10 @@ class InstallLib():
         self.__MCpath = path
 
 
+    def getMCpath(self):
+        return self.__MCpath
+
+
     def generateProfileKey(self):
         chars = '0123456789abcdef'
         result = ''
@@ -43,19 +47,21 @@ class InstallLib():
             print("The file " + path + " could not be removed.")
 
 
-    def installForge(self):
+    def installForge(self, callback):
         print(urllib.request.urlretrieve(self.__forgeURL, "forgeinstall.jar"))
         subprocess.call(['java', '-jar', 'forgeinstall.jar'])
         self.removeFile("forgeinstall.jar")
         self.removeFile("forgeinstall.jar.log")
+        callback()
 
 
-    def installMods(self):
+    def installMods(self, callback):
         print(urllib.request.urlretrieve("https://intercraftmc.com/repository/modpack.zip", "modpack.zip"))
         zipFile = zipfile.ZipFile("modpack.zip", 'r')
         zipFile.extractall(os.path.join(self.__MCpath, "InterCraft"))
         zipFile.close()
         self.removeFile("modpack.zip")
+        callback()
 
 
     def installJson(self):
