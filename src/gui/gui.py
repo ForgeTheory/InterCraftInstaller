@@ -31,7 +31,7 @@ class Window():
         #self.__spacer = Label(self.__master, background = 'white')
         #self.__spacer.grid(row=9,column=8)
 
-        self.__button1 = Button(self.__master, text = "Install InterCraft", font = ("Helvetica", 16))
+        self.__button1 = Button(self.__master, text = "Install InterCraft", font = ("Helvetica", 16), cursor = "hand2")
         self.__button1.grid(row=11,column=10)
 
         #Button styling
