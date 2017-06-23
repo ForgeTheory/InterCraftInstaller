@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter.filedialog import *
 from PIL import ImageTk,Image
 import urllib.request
 from installlib.installlib import *
@@ -18,7 +19,7 @@ class Window():
         except Exception as e:
             print("Couldn't delete the intercraft image...")
 
-
+        self.__installer = InstallLib()
 
         self.__master.configure(background = 'white')
 
@@ -31,8 +32,11 @@ class Window():
         #self.__spacer = Label(self.__master, background = 'white')
         #self.__spacer.grid(row=9,column=8)
 
-        self.__button1 = Button(self.__master, text = "Install InterCraft", font = ("Helvetica", 16), cursor = "hand2")
-        self.__button1.grid(row=11,column=10)
+        self.__button1 = Button(self.__master, text = "Install InterCraft", font = ("Helvetica", 20), cursor = "hand2")
+        self.__button1.grid(row=10,column=10)
+
+        self.__button2 = Button(self.__master, text = "Set Minecraft directory", font = ("Helvetica", 12), cursor = "hand2")
+        self.__button2.grid(row=11,column = 10)
 
         #Button styling
         self.__button1.configure(foreground = 'white')
@@ -43,6 +47,15 @@ class Window():
         self.__button1.bind("<Enter>", self.onHover)
         self.__button1.bind("<Leave>", self.onLeave)
 
+        self.__button2.configure(foreground = 'white')
+        self.__button2.configure(relief = 'flat')
+        self.__button2.configure(background = '#008BFF')
+        self.__button2.configure(activebackground = '#006ac2')
+        self.__button2.configure(activeforeground = 'white')
+        self.__button2.bind("<Enter>", self.onHover2)
+        self.__button2.bind("<Leave>", self.onLeave2)
+        self.__button2.bind("<ButtonRelease-1>", self.getDirectory)
+
 
     def onHover(self, event):
         self.__button1.configure(background = '#006ac2')
@@ -52,13 +65,28 @@ class Window():
         self.__button1.configure(background = '#008BFF')
 
 
-    def install(self):
+    def onHover2(self, event):
+        self.__button2.configure(background = '#006ac2')
+
+
+    def onLeave2(self, event):
+        self.__button2.configure(background = '#008BFF')
+
+
+    def getDirectory(self, event):
+        newDirectory = askdirectory()
+        if newDirectory == "":
+            pass
+        else:
+            self.__installer.setMCpath(newDirectory)
+
+
+    def install(self, event):
         print("Installing InterCraft...")
-        installer = InstallLib()
         print("Installing forge...")
-        installer.installForge()
+        self.__installer.installForge()
         print("Installing mods...")
-        installer.installMods()
+        self.__installer.installMods()
         print("Configuring profile...")
-        installer.installJson
+        self.__installer.installJson
         print("install complete.")

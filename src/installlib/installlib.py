@@ -24,6 +24,10 @@ class InstallLib():
             self.__MCpath =  os.path.join(self.__homePath, '.minecraft')
 
 
+    def setMCpath(self, path):
+        self.__MCpath = path
+
+
     def generateProfileKey(self):
         chars = '0123456789abcdef'
         result = ''
