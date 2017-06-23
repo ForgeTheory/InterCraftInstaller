@@ -5,8 +5,8 @@ def main(argv):
     root = Tk()
     root.title("InterCraft Installer")
 
-    w = 330
-    h = 173
+    w = 700
+    h = 423
 
     ws = root.winfo_screenwidth()
     hs = root.winfo_screenheight()
@@ -17,6 +17,7 @@ def main(argv):
     root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
     my_gui = Window(root)
+    root.resizable(False, False)
     root.mainloop()
 
     return 0
