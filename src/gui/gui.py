@@ -14,7 +14,6 @@ class Window():
         self.__image = ImageTk.PhotoImage(Image.open('intercraftimage.png'))
 
         try:
-            pass
             os.remove('intercraftimage.png')
         except Exception as e:
             print("Couldn't delete the intercraft image...")
