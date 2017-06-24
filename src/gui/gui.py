@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.filedialog import *
+from tkinter.messagebox import *
 from PIL import ImageTk,Image
 import urllib.request
 from installlib.installlib import *
@@ -115,6 +116,7 @@ class Window():
         if self.__finished == 3:
             print("install complete.")
             self.__progress = 100
+            showinfo("InterCraft Installer", "Install Complete.")
             self.__master.quit()
         elif self.__finished == 2:
             self.__progress = 50
