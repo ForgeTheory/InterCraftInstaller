@@ -67,6 +67,8 @@ class InstallLib():
     def installJson(self):
         files = open(os.path.join(self.__MCpath, 'launcher_profiles.json'))
         launcherProfiles = json.load(files)
+        files.close()
+
         for key in list(launcherProfiles['profiles'].keys()):
             try:
                 if launcherProfiles['profiles'][key]['name'] == "InterCraft":
@@ -74,6 +76,7 @@ class InstallLib():
                     break
             except KeyError as e:
                 pass
+
         launcherProfiles['profiles'][self.generateProfileKey()] = {
             "name": "InterCraft",
             "type": "custom",
@@ -84,8 +87,8 @@ class InstallLib():
             "gameDir": os.path.join(self.__MCpath, "InterCraft"),
             "javaArgs": "-Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:-UseAdaptiveSizePolicy -Xmn128M"
         }
-        files.close()
 
+        print("Adding 'InterCraft' launcher profile...")
         saveFile = open(os.path.join(self.__MCpath, 'launcher_profiles.json'), 'w')
-        json.dump(launcherProfiles, saveFile, indent = 4)
+        json.dump(launcherProfiles, saveFile, indent=4)
         saveFile.close()

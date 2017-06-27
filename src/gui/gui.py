@@ -107,7 +107,7 @@ class Window():
         t2.daemon = True
         t2.start()
         print("Configuring profile...")
-        self.__installer.installJson
+        self.__installer.installJson()
         self.installFinish()
 
 
