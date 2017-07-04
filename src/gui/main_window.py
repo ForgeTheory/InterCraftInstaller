@@ -20,11 +20,11 @@ class MainWindow(Tk):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        screenWidth = self.winfo_screenwidth()
-        screenHeight = self.winfo_screenheight()
+        self.__screenWidth = self.winfo_screenwidth()
+        self.__screenHeight = self.winfo_screenheight()
 
-        x = (screenWidth/2) - (MainWindow.WIDTH/2)
-        y = (screenHeight/2) - (MainWindow.HEIGHT/2)
+        x = (self.__screenWidth/2) - (MainWindow.WIDTH/2)
+        y = (self.__screenHeight/2) - (MainWindow.HEIGHT/2)
 
         self.title("InterCraft Installer")
         self.resizable(False, False)
@@ -48,8 +48,12 @@ class MainWindow(Tk):
 
         self.configure(background = 'white')
 
+        C = Canvas(self, bg = 'white', width = self.__screenWidth, height = self.__screenHeight)
+
         self.__imageLabel = Label(self, image = self.__image)
-        self.__imageLabel.grid(row=0, column=0, columnspan=20, rowspan=20)
+        self.__imageLabel.place(x=0, y=0, relwidth=1, relheight=1)
+        C.pack()
+
 
         self.__finished = 0
         self.__progress = IntVar(0)
@@ -59,13 +63,13 @@ class MainWindow(Tk):
         #self.__title.grid(row=9,column=9)
 
         self.__button1 = Button(self, text = "Install InterCraft", font = ("Helvetica", 20), cursor = "hand2")
-        self.__button1.grid(row=10,column=10)
+        self.__button1.place(relx=0.5, rely=0.45, anchor=CENTER)
 
         self.__button2 = Button(self, text = "Change Minecraft directory", font = ("Helvetica", 12), cursor = "hand2")
-        self.__button2.grid(row=11,column = 10)
+        self.__button2.place(relx=0.5, rely=0.60, anchor=CENTER)
 
         self.__directoryDisp = Label(self, background = '#111111', foreground = 'white', font = ("Helvetica", 10), width = 87, height = 2)
-        self.__directoryDisp.grid(row=19,column=10)
+        self.__directoryDisp.place(relx=0.5, rely=0.96, anchor=CENTER)
 
         #Button styling
         self.__button1.configure(foreground = 'white')
@@ -126,8 +130,8 @@ class MainWindow(Tk):
         self.__button1.unbind("<ButtonRelease-1>")
         self.__button1.unbind("<Enter>")
         self.__button1.unbind("<Leave>")
-        self.__button2.grid_forget()
-        self.__progressBar.grid(row=11, column=10)
+        self.__button2.place_forget()
+        self.__progressBar.place(relx=0.5, rely=0.60, anchor=CENTER)
         print("Installing InterCraft...")
         print("Installing forge...")
         t1 = Thread(target = self.__installer.installForge, args = (self.installFinish,))
