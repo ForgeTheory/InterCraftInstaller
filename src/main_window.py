@@ -38,8 +38,8 @@ class MainWindow(Tk):
 
     def preInit(self):
 
-        print(urlretrieve(MainWindow.IMAGE_URL, utils.tempPath(MainWindow.IMAGE_NAME)))
-        self.__image = ImageTk.PhotoImage(Image.open(utils.tempPath(MainWindow.IMAGE_NAME)))
+        self.tk.call('wm', 'iconphoto', self._w, utils.image('icon.ico'))
+        self.__image = utils.image('background.png')
         self.__installer = InstallLib()
         self.__installErrors = {}
 
@@ -88,8 +88,6 @@ class MainWindow(Tk):
 
 
     def clean(self):
-
-        utils.removeFile(utils.tempPath(MainWindow.IMAGE_NAME))
         self.__installer.clean()
 
 

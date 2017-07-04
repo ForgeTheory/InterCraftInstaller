@@ -1,7 +1,10 @@
+from PIL.ImageTk import PhotoImage
 import os
 import re
 import sys
 import tempfile
+
+import res
 
 
 def reformatPath(path):
@@ -35,3 +38,7 @@ def removeFile(filePath):
         os.remove(filePath)
     except Exception as e:
         print("The file " + filePath + " could not be removed.")
+
+
+def image(name):
+    return PhotoImage(data=res.read(name))

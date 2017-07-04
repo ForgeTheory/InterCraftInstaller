@@ -1,0 +1,1 @@
+python %~dp0tools\buildres.py %~dp0res %~dp0src\res.py
