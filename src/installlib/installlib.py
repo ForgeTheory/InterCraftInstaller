@@ -1,36 +1,52 @@
-import os
-import urllib.request
-import subprocess
-import zipfile
-import json
-import random
 import datetime
-import shutil
+import json
+import os
+import random
+import subprocess
+import sys
+import urllib.request
+import zipfile
+
+import utils
 
 class InstallLib():
 
-    def __init__(self):
-        self.__homePath = os.path.expanduser("~")
-        self.__MCpath = ""
+    FORGE_URL = 'https://intercraftmc.com/repository/forge/'
+    FORGE_NAME = 'forge.jar'
 
-        infoJson = urllib.request.urlopen("https://intercraftmc.com/repository/intercraft.json")
+    MODPACK_URL = 'https://intercraftmc.com/repository/modpack.zip'
+    MODPACK_NAME = 'modpack.zip'
+
+    REPO_URL = 'https://intercraftmc.com/repository/intercraft.json'
+
+
+    def __init__(self):
+        self.__mcPath = utils.minecraftPath()
+
+        try:
+            infoJson = urllib.request.urlopen(InstallLib.REPO_URL)
+        except Exception as e:
+            print("This is where David fucked up.")
+
         self.__info = json.loads(infoJson.read().decode())
 
         self.__lastVersionID = self.__info['forge']['name']
-        self.__forgeURL = 'https://intercraftmc.com/repository/forge/' + self.__info['forge']['file']
-
-        if os.name == 'nt':
-            self.__MCpath = os.path.join(self.__homePath, 'AppData/Roaming/.minecraft')
-        else:
-            self.__MCpath =  os.path.join(self.__homePath, '.minecraft')
+        self.__forgeURL = InstallLib.FORGE_URL + self.__info['forge']['file']
 
 
-    def setMCpath(self, path):
-        self.__MCpath = path
+    def clean(self):
+
+        utils.removeFile(utils.tempPath(InstallLib.FORGE_NAME))
+        utils.removeFile(InstallLib.FORGE_NAME + ".log")
+        utils.removeFile(utils.tempPath(InstallLib.MODPACK_NAME))
 
 
-    def getMCpath(self):
-        return self.__MCpath
+    def getMcPath(self):
+        return self.__mcPath
+
+
+    def setMcPath(self, path):
+        self.__mcPath = path
 
 
     def generateProfileKey(self):
@@ -41,38 +57,37 @@ class InstallLib():
         return result
 
 
-    def removeFile(self, path):
-        try:
-            os.remove(path)
-        except Exception as e:
-            print("The file " + path + " could not be removed.")
-
-
     def installForge(self, callback):
-        print(urllib.request.urlretrieve(self.__forgeURL, "forgeinstall.jar"))
-        subprocess.call(['java', '-jar', 'forgeinstall.jar'])
-        self.removeFile("forgeinstall.jar")
-        self.removeFile("forgeinstall.jar.log")
-        callback()
+        print(urllib.request.urlretrieve(self.__forgeURL, utils.tempPath(InstallLib.FORGE_NAME)))
+        try:
+            subprocess.check_output(['java', '-jar', utils.tempPath(InstallLib.FORGE_NAME)])
+        except Exception as e:
+            print("Failed to install Forge\n", e)
+            return callback(False, 'forge', 'Failed to install Forge, check your Java installation')
+        callback(True)
 
 
     def installMods(self, callback):
-        print(urllib.request.urlretrieve("https://intercraftmc.com/repository/modpack.zip", "modpack.zip"))
         try:
-            shutil.rmtree(os.path.join(self.__MCpath, "InterCraft/mods"))
+            print(urllib.request.urlretrieve(InstallLib.MODPACK_URL, utils.tempPath(InstallLib.MODPACK_NAME)))
+            zipFile = zipfile.ZipFile(utils.tempPath(InstallLib.MODPACK_NAME), 'r')
+            zipFile.extractall(os.path.join(self.__mcPath, "InterCraft"))
+            zipFile.close()
         except Exception as e:
-            print("Couldn't delete mods from previous installation. If this is first install, please disregard. Otherwise contact an admin.")
-        zipFile = zipfile.ZipFile("modpack.zip", 'r')
-        zipFile.extractall(os.path.join(self.__MCpath, "InterCraft"))
-        zipFile.close()
-        self.removeFile("modpack.zip")
-        callback()
+            print("Failed to install modpack\n", e)
+            return callback(False, 'mods', 'Failed to install modpack')
+        callback(True)
 
 
-    def installJson(self):
-        files = open(os.path.join(self.__MCpath, 'launcher_profiles.json'))
-        launcherProfiles = json.load(files)
-        files.close()
+    def installJson(self, callback):
+
+        try:
+            files = open(os.path.join(self.__mcPath, 'launcher_profiles.json'))
+            launcherProfiles = json.load(files)
+            files.close()
+        except Exception as e:
+            print("Failed to open launcher_profiles.json\n", e)
+            return callback(False, 'launcher', 'Failed to open Minecraft launcher profiles')
 
         for key in list(launcherProfiles['profiles'].keys()):
             try:
@@ -89,11 +104,18 @@ class InstallLib():
             "lastUsed": datetime.datetime.now().isoformat()[:-3]+'Z',
             "icon": "Redstone_Ore",
             "lastVersionId": self.__lastVersionID,
-            "gameDir": os.path.join(self.__MCpath, "InterCraft"),
+            "gameDir": os.path.join(self.__mcPath, "InterCraft"),
             "javaArgs": "-Xmx3G -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:-UseAdaptiveSizePolicy -Xmn128M"
         }
 
         print("Adding 'InterCraft' launcher profile...")
-        saveFile = open(os.path.join(self.__MCpath, 'launcher_profiles.json'), 'w')
-        json.dump(launcherProfiles, saveFile, indent=4)
-        saveFile.close()
+
+        try:
+            saveFile = open(os.path.join(self.__mcPath, 'launcher_profiles.json'), 'w')
+            json.dump(launcherProfiles, saveFile, indent=4)
+            saveFile.close()
+        except Exception as e:
+            print("Failed installing launcher profile\n", e)
+            return callback(False, 'launcher', 'Failed to save Minecraft launcher profiles')
+
+        callback(True)

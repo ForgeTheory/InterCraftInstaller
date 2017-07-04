@@ -1,26 +1,16 @@
 import sys
-from gui.gui import *
+from gui.main_window import *
 
 def main(argv):
-    root = Tk()
-    root.title("InterCraft Installer")
 
-    w = 700
-    h = 419
+    # Create the main window
+    mainWindow = MainWindow()
 
-    ws = root.winfo_screenwidth()
-    hs = root.winfo_screenheight()
+    # Run the main loop
+    mainWindow.mainloop()
 
-    x = (ws/2) - (w/2)
-    y = (hs/2) - (h/2)
-
-    root.geometry('%dx%d+%d+%d' % (w, h, x, y))
-
-    my_gui = Window(root)
-    root.resizable(False, False)
-    root.mainloop()
-
+    # Return the exit code
     return 0
 
 if __name__ == '__main__':
-    main(sys.argv)
+    sys.exit(main(sys.argv))
