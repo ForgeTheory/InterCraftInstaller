@@ -58,8 +58,8 @@ class InstallLib():
 
 
     def installForge(self, callback):
-        print(urllib.request.urlretrieve(self.__forgeURL, utils.tempPath(InstallLib.FORGE_NAME)))
         try:
+            print(urllib.request.urlretrieve(self.__forgeURL, utils.tempPath(InstallLib.FORGE_NAME)))
             subprocess.check_output(['java', '-jar', utils.tempPath(InstallLib.FORGE_NAME)])
         except Exception as e:
             print("Failed to install Forge\n", e)
