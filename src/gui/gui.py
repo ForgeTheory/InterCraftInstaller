@@ -96,18 +96,19 @@ class Window():
         self.__button1.configure(cursor = 'arrow')
         self.__button1.bind("<ButtonRelease-1>", self.doNothing)
         self.__button1.bind("<Enter>", self.onLeave)
-        self.__progressBar.grid(row=13, column=10)
+        self.__button2.grid_forget()
+        self.__progressBar.grid(row=11, column=10)
         print("Installing InterCraft...")
         print("Installing forge...")
-        t1 = threading.Thread(target = self.__installer.installForge, args = (self.installFinish,))
-        t1.daemon = True
-        t1.start()
+        #t1 = threading.Thread(target = self.__installer.installForge, args = (self.installFinish,))
+        #t1.daemon = True
+        #t1.start()
         print("Installing mods...")
-        t2 = threading.Thread(target = self.__installer.installMods, args = (self.installFinish,))
-        t2.daemon = True
-        t2.start()
+        #t2 = threading.Thread(target = self.__installer.installMods, args = (self.installFinish,))
+        #t2.daemon = True
+        #t2.start()
         print("Configuring profile...")
-        self.__installer.installJson()
+        #self.__installer.installJson()
         self.installFinish()
 
 

@@ -5,6 +5,7 @@ import zipfile
 import json
 import random
 import datetime
+import shutil
 
 class InstallLib():
 
@@ -57,6 +58,10 @@ class InstallLib():
 
     def installMods(self, callback):
         print(urllib.request.urlretrieve("https://intercraftmc.com/repository/modpack.zip", "modpack.zip"))
+        try:
+            shutil.rmtree(os.path.join(self.__MCpath, "InterCraft/mods"))
+        except Exception as e:
+            print("Couldn't delete mods from previous installation. If this is first install, please disregard. Otherwise contact an admin.")
         zipFile = zipfile.ZipFile("modpack.zip", 'r')
         zipFile.extractall(os.path.join(self.__MCpath, "InterCraft"))
         zipFile.close()
@@ -85,7 +90,7 @@ class InstallLib():
             "icon": "Redstone_Ore",
             "lastVersionId": self.__lastVersionID,
             "gameDir": os.path.join(self.__MCpath, "InterCraft"),
-            "javaArgs": "-Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:-UseAdaptiveSizePolicy -Xmn128M"
+            "javaArgs": "-Xmx3G -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:-UseAdaptiveSizePolicy -Xmn128M"
         }
 
         print("Adding 'InterCraft' launcher profile...")
