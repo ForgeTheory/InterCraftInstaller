@@ -6,6 +6,7 @@ import subprocess
 import sys
 import urllib.request
 import zipfile
+import shutil
 
 import utils
 
@@ -68,6 +69,12 @@ class InstallLib():
 
 
     def installMods(self, callback):
+
+        try:
+            shutil.rmtree(os.path.join(self.mcPath, 'InterCraft/mods'))
+        except Exception as e:
+            pass
+
         try:
             print(urllib.request.urlretrieve(InstallLib.MODPACK_URL, utils.tempPath(InstallLib.MODPACK_NAME)))
             zipFile = zipfile.ZipFile(utils.tempPath(InstallLib.MODPACK_NAME), 'r')
